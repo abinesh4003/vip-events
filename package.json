@@ -57,6 +57,7 @@
     "@types/node": "24.2.1",
     "auto-prefixer": "^0.4.2",
     "autoprefixer": "^10.4.21",
+    "cssnano": "^7.1.0",
     "eslint": "^9.33.0",
     "eslint-config-next": "^15.4.6",
     "postcss": "^8.5.6",
