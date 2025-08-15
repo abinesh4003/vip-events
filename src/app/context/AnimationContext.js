@@ -12,27 +12,37 @@ export function AnimationProvider({ children }) {
   const [previousPath, setPreviousPath] = useState(null)
   const [transitionDirection, setTransitionDirection] = useState('forward')
 
+  // Check for reduced motion preference (only in browser)
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setPrefersReducedMotion(mediaQuery.matches)
-    const handleChange = () => setPrefersReducedMotion(mediaQuery.matches)
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
-  }, [])
+    if (typeof window !== 'undefined') {
+      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+      setPrefersReducedMotion(mediaQuery.matches)
 
-  useEffect(() => {
-    const visited = sessionStorage.getItem('hasVisited')
-    if (!visited) {
-      sessionStorage.setItem('hasVisited', 'true')
-    } else {
-      setIsFirstVisit(false)
+      const handleChange = () => setPrefersReducedMotion(mediaQuery.matches)
+      mediaQuery.addEventListener('change', handleChange)
+
+      return () => mediaQuery.removeEventListener('change', handleChange)
     }
   }, [])
 
+  // Track first visit (only in browser)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const visited = sessionStorage.getItem('hasVisited')
+      if (!visited) {
+        sessionStorage.setItem('hasVisited', 'true')
+      } else {
+        setIsFirstVisit(false)
+      }
+    }
+  }, [])
+
+  // Track route changes for directional animations
   useEffect(() => {
     if (previousPath) {
       const previousIndex = NAV_LINKS.findIndex(link => link.path === previousPath)
       const currentIndex = NAV_LINKS.findIndex(link => link.path === pathname)
+
       if (currentIndex > previousIndex) {
         setTransitionDirection('forward')
       } else {
@@ -55,9 +65,11 @@ export function AnimationProvider({ children }) {
           initial: shouldAnimate ? customProps.initial || 'hidden' : false,
           animate: shouldAnimate ? customProps.animate || 'visible' : false,
           exit: shouldAnimate ? customProps.exit || 'hidden' : false,
-          transition: shouldAnimate ? customProps.transition || { duration: 0.6 } : { duration: 0 },
-          ...customProps
-        })
+          transition: shouldAnimate
+            ? customProps.transition || { duration: 0.6 }
+            : { duration: 0 },
+          ...customProps,
+        }),
       }}
     >
       {children}
@@ -78,5 +90,5 @@ const NAV_LINKS = [
   { path: '/about', label: 'About' },
   { path: '/services', label: 'Services' },
   { path: '/gallery', label: 'Gallery' },
-  { path: '/contact', label: 'Contact' }
+  { path: '/contact', label: 'Contact' },
 ]
