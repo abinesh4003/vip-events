@@ -5,12 +5,27 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { ArrowRight, Instagram } from 'lucide-react'
 import { Button } from '../ui/button'
-import LightGallery from 'lightgallery/react'
-import lgThumbnail from 'lightgallery/plugins/thumbnail'
-import lgZoom from 'lightgallery/plugins/zoom'
-import AnimateOnScroll from '../animations/AnimateOnScroll'
 
-// Import lightgallery CSS
+import AnimateOnScroll from '../animations/AnimateOnScroll'
+import dynamic from 'next/dynamic'
+
+// Dynamically import LightGallery with no SSR
+const LightGallery = dynamic(
+  () => import('lightgallery/react').then((mod) => mod.default),
+  { ssr: false }
+)
+
+const lgThumbnail = dynamic(
+  () => import('lightgallery/plugins/thumbnail').then((mod) => mod.default),
+  { ssr: false }
+)
+
+const lgZoom = dynamic(
+  () => import('lightgallery/plugins/zoom').then((mod) => mod.default),
+  { ssr: false }
+)
+
+// Import CSS (these can stay as is)
 import 'lightgallery/css/lightgallery.css'
 import 'lightgallery/css/lg-zoom.css'
 import 'lightgallery/css/lg-thumbnail.css'

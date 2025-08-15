@@ -2,19 +2,42 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import LightGallery from 'lightgallery/react'
-import lgThumbnail from 'lightgallery/plugins/thumbnail'
-import lgZoom from 'lightgallery/plugins/zoom'
-import lgVideo from 'lightgallery/plugins/video'
+import dynamic from 'next/dynamic'
 import { Button } from '../components/ui/button'
 import { ArrowRight, Instagram } from 'lucide-react'
 import AnimateOnScroll from '../components/animations/AnimateOnScroll'
 import TextReveal from '../components/animations/TextReveal'
 import Link from 'next/link'
+
+
+
+// Dynamically import LightGallery with no SSR
+const LightGallery = dynamic(
+  () => import('lightgallery/react').then((mod) => mod.default),
+  { ssr: false }
+)
+
+const lgThumbnail = dynamic(
+  () => import('lightgallery/plugins/thumbnail').then((mod) => mod.default),
+  { ssr: false }
+)
+
+const lgZoom = dynamic(
+  () => import('lightgallery/plugins/zoom').then((mod) => mod.default),
+  { ssr: false }
+)
+
+const lgVideo = dynamic(
+  () => import('lightgallery/plugins/video').then((mod) => mod.default),
+  { ssr: false }
+)
+
+// Import CSS (these can stay as is)
 import 'lightgallery/css/lightgallery.css'
 import 'lightgallery/css/lg-zoom.css'
 import 'lightgallery/css/lg-thumbnail.css'
 import 'lightgallery/css/lg-video.css'
+
 
 const galleryItems = [
   {
