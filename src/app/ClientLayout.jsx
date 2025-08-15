@@ -9,7 +9,7 @@ import Preloader from './components/common/Preloader'
 export default function ClientLayout({ children }) {
   return (
     <AnimationProvider>
-      <Preloader />
+     
       <Header />
       <main className="min-h-[calc(100vh-320px)]">
         {children}
